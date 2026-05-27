@@ -37,4 +37,7 @@ public class Blog {
     )
     @Column(name = "tags")
     private List<Tag> tags = new ArrayList<>();
+
+    public void setTags(List<String> tags) {
+    }
 }
