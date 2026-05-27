@@ -1,6 +1,7 @@
 package codewithmoise.org.blogbackend.DTO.requests;
 
 
+import codewithmoise.org.blogbackend.models.Tag;
 import lombok.Data;
 
 import java.util.List;
