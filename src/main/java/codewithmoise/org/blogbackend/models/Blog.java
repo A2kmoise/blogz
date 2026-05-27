@@ -4,6 +4,9 @@ import codewithmoise.org.blogbackend.enums.BlogCategory;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table
 @Data
@@ -22,6 +25,16 @@ public class Blog {
     @Enumerated(EnumType.STRING)
     private BlogCategory category;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "blog_tags",
+            joinColumns = @JoinColumn(name = "blog_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     @Column(name = "tags")
-    private String Tags;
+    private List<Tag> tags = new ArrayList<>();
 }
