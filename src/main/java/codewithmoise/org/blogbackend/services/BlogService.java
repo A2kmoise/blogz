@@ -9,6 +9,7 @@ import codewithmoise.org.blogbackend.repository.BlogRepository;
 import codewithmoise.org.blogbackend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,8 +23,22 @@ public class BlogService {
         this.userRepository = userRepository;
     }
 
-    public BlogResponse getBlogs(){
-       return (BlogResponse) blogRepository.findAll();
+    public List<BlogResponse> getBlogs() {
+
+        List<Blog> blogs = blogRepository.findAll();
+
+        return blogs.stream().map(blog -> {
+
+            BlogResponse response = new BlogResponse();
+
+            response.setId(blog.getId());
+            response.setTitle(blog.getTitle());
+            response.setContent(blog.getContent());
+            response.setAuthorId(blog.getUser().getId());
+
+            return response;
+
+        }).toList();
     }
     public Optional<Blog> getBlogById(Long id){
         return blogRepository.findById(id);

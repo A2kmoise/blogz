@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.support.ResourceTransactionManager;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,7 +26,7 @@ public class BlogController {
         this.resourceTransactionManager = resourceTransactionManager;
     }
     @GetMapping("/")
-    public ResponseEntity<BlogResponse> getBlogs(){
+    public ResponseEntity<List<BlogResponse>> getBlogs(){
         return ResponseEntity.ok().body(blogService.getBlogs());
     }
 
