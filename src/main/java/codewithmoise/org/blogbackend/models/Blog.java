@@ -3,8 +3,10 @@ package codewithmoise.org.blogbackend.models;
 import codewithmoise.org.blogbackend.enums.BlogCategory;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -39,5 +41,8 @@ public class Blog {
     private List<Tag> tags = new ArrayList<>();
 
     public void setTags(List<String> tags) {
+    }
+    public List<String >getTags(){
+        return Collections.singletonList(tags.toString());
     }
 }
