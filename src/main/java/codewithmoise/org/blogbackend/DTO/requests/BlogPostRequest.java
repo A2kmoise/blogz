@@ -21,4 +21,6 @@ public class BlogPostRequest {
     private BlogCategory category;
 
     private List<String> tags;
+
+    private Long userId;
 }
