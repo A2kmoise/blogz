@@ -1,16 +1,19 @@
 package codewithmoise.org.blogbackend.DTO;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Data
 public class AuthenticationRequest {
 
-    @NotNull
-    String email;
+    @Email(message = "invalid email")
+    @NotBlank(message = "message is required")
+    private String email;
 
-    @NotNull
-    @Length(min = 6)
-    String password;
+    @NotBlank(message = "password is required")
+    @Length(min = 6,
+    message = "password should be at least characters")
+    private  String password;
 }
