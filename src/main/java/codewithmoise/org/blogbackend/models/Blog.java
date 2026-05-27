@@ -3,8 +3,11 @@ package codewithmoise.org.blogbackend.models;
 import codewithmoise.org.blogbackend.enums.BlogCategory;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.scheduling.support.SimpleTriggerContext;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +42,13 @@ public class Blog {
     )
     @Column(name = "tags")
     private List<Tag> tags = new ArrayList<>();
+
+    @CreationTimestamp
+    @Column(name = "updatedAt", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatesAt;
 
     public void setTags(List<String> tags) {
     }
