@@ -3,22 +3,25 @@ package codewithmoise.org.blogbackend.DTO;
 import codewithmoise.org.blogbackend.enums.BlogCategory;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.util.List;
 
 
 @Data
 public class BlogPostRequest {
 
-    @NotEmpty
-    String title;
+    @NotBlank(message = "title is required")
+    private String title;
 
-    @NotEmpty
-    String content;
+    @NotBlank(message = "content is required")
+    private String content;
 
-    @NotEmpty
-    @Enumerated(EnumType.STRING)
-    BlogCategory category;
+    @NotNull(message = "Invalid category or empty category")
+    private BlogCategory category;
 
-    String tags;
+    private List<String> tags;
 }
