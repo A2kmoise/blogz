@@ -1,4 +1,4 @@
-package codewithmoise.org.blogbackend.DTO;
+package codewithmoise.org.blogbackend.DTO.requests;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
