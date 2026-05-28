@@ -11,11 +11,17 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
+
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(""));
+                        .requestMatchers("/api/blogs/**").hasRole("AUTHOR")
+                        .requestMatchers("/api/admin/").hasRole("ADMIN")
+                        .requestMatchers("/auth/").permitAll()
+                        .requestMatchers("/swagger-ui/index.html").permitAll()
+                        .anyRequest().authenticated()
+                );
 
         return http.build();
     }
