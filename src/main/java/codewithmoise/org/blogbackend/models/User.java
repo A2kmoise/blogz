@@ -2,7 +2,6 @@ package codewithmoise.org.blogbackend.models;
 
 import codewithmoise.org.blogbackend.enums.UserRoles;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name = "users")
 @Data
 public class User {
 
@@ -30,17 +29,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRoles role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Blog> blogs = new ArrayList<>();
 
     @CreationTimestamp
-    @Column(name = "updatedAt", updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatesAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public User() {
     }
-
 }
