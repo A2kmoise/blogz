@@ -1,6 +1,7 @@
 package codewithmoise.org.blogbackend.enums;
 
 public enum UserRoles {
-   ADMIN,
+    ADMIN,
+    AUTHOR,
     USER,
 }
