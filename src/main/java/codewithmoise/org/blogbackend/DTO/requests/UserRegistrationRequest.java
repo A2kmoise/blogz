@@ -1,0 +1,18 @@
+package codewithmoise.org.blogbackend.DTO.requests;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+@Data
+public class UserRegistrationRequest {
+
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email is required")
+    private String email;
+
+    @NotBlank(message = "Password is required")
+    @Length(min = 6, message = "Password should be at least 6 characters")
+    private String password;
+}
