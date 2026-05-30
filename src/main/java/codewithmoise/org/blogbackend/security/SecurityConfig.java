@@ -19,7 +19,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/blogs/**").hasRole("AUTHOR")
                         .requestMatchers("/api/admin/").hasRole("ADMIN")
                         .requestMatchers("/auth/").permitAll()
-                        .requestMatchers("/swagger-ui/index.html").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
