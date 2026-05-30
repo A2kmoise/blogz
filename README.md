@@ -165,7 +165,6 @@ spring.datasource.password=secret
 1. Create new DTOs in `src/main/java/.../DTO/`
 2. Add service methods in `src/main/java/.../services/`
 3. Create controller endpoints in `src/main/java/.../controllers/`
-4. Update frontend JavaScript in `src/main/resources/static/js/app.js`
 
 ### Security Utilities
 - **JwtUtil**: Token generation, validation, and claims extraction
