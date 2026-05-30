@@ -19,7 +19,7 @@ public class BlogResponse {
 
     private List<String> tags;
 
-    private Long AuthorId;
+    private Long authorId;
 
     private LocalDateTime createdAt;
 }
