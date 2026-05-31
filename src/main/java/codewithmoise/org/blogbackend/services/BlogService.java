@@ -8,6 +8,9 @@ import codewithmoise.org.blogbackend.models.Tag;
 import codewithmoise.org.blogbackend.models.User;
 import codewithmoise.org.blogbackend.repository.BlogRepository;
 import codewithmoise.org.blogbackend.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,9 +30,14 @@ public class BlogService {
         this.tagService = tagService;
     }
 
-    public List<BlogResponse> getBlogs() {
-        List<Blog> blogs = blogRepository.findAllByOrderByCreatedAtDesc();
-        return blogs.stream().map(this::mapToBlogResponse).toList();
+   // Fetching in pages each has 10 blogs
+    public Page<BlogResponse> getBlogs(int page, int size) {
+      Pageable pageable = PageRequest.of(
+                page, size
+        );
+         Page<Blog> blogs = blogRepository.findAllByOrderByCreatedAtDesc(pageable);
+         return blogs.map(this::mapToBlogResponse);
+
     }
 
     public Optional<BlogResponse> getBlogById(Long id) {
