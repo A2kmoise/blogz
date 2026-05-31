@@ -5,6 +5,7 @@ import codewithmoise.org.blogbackend.DTO.requests.BlogUpdateRequest;
 import codewithmoise.org.blogbackend.DTO.responses.BlogResponse;
 import codewithmoise.org.blogbackend.services.BlogService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,12 @@ public class BlogController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BlogResponse>> getBlogs() {
-        return ResponseEntity.ok(blogService.getBlogs());
+    public ResponseEntity<Page<BlogResponse>> getBlogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(blogService.getBlogs(page, size)
+        );
     }
 
     @GetMapping("/{id}")
