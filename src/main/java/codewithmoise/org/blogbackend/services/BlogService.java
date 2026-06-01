@@ -11,8 +11,11 @@ import codewithmoise.org.blogbackend.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,7 +48,9 @@ public class BlogService {
     }
 
     public BlogResponse createBlog(BlogPostRequest blogPostRequest) {
-        User user = userRepository.findById(blogPostRequest.getUserId())
+
+        Long currentUserId = getCurrentUserId();
+        User user = userRepository.findById(currentUserId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Blog blog = new Blog();
@@ -67,6 +72,11 @@ public class BlogService {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new RuntimeException("Blog not found"));
 
+        Long currentUserId = getCurrentUserId();
+        if(!blog.getUser().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("You can not update");
+        }
+
         if (blogUpdateRequest.getContent() != null) {
             blog.setContent(blogUpdateRequest.getContent());
         }
@@ -83,6 +93,11 @@ public class BlogService {
     public void deleteBlog(Long blogId) {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new RuntimeException("Blog not found"));
+
+        Long currentUserId = getCurrentUserId();
+        if(!blog.getUser().getId().equals(currentUserId)){
+            throw new AccessDeniedException("You can not delete");
+        }
         blogRepository.delete(blog);
     }
 
@@ -110,5 +125,14 @@ public class BlogService {
         }
         
         return response;
+    }
+
+    private Long getCurrentUserId(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth == null || !auth.isAuthenticated()) {
+            throw new AccessDeniedException("Not authenticated");
+
+        }
+        return (Long) auth.getPrincipal();
     }
 }
