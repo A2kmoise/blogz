@@ -24,6 +24,9 @@ public class Blog {
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "imageUrl")
+    private String imageUrl;
+
     @Column(name = "category")
     @Enumerated(EnumType.STRING)
     private BlogCategory category;
