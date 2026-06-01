@@ -25,11 +25,7 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getStats());
     }
 
-    // ─── Users ───────────────────────────────────────────────
-    @GetMapping("/users")
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        return ResponseEntity.ok(adminService.getAllUsers());
-    }
+    // ─── Users ──────────────────────────────────────────────
 
     @GetMapping("/authors")
     public ResponseEntity<List<UserResponse>> getAllAuthors() {
