@@ -62,6 +62,6 @@ public class BlogController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBlog(@PathVariable Long id) {
         blogService.deleteBlog(id);
-        return ResponseEntity.noContent().build();
+       return ResponseEntity.noContent().build();
     }
 }
