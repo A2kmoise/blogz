@@ -11,4 +11,7 @@ public class UserResponse {
     private String email;
     private UserRoles role;
     private LocalDateTime createdAt;
+
+    public void setSuspended(boolean suspended) {
+    }
 }
