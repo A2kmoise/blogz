@@ -27,22 +27,14 @@ public class AdminService {
 
     // ─── Stats ───────────────────────────────────────────────
     public AdminStatsResponse getStats() {
-        long totalUsers = userRepository.countByRole(UserRoles.USER);
         long totalAuthors = userRepository.countByRole(UserRoles.AUTHOR);
         long totalBlogs = blogRepository.count();
         long suspendedUsers = userRepository.countBySuspended(true);
 
-        return new AdminStatsResponse(totalUsers, totalAuthors, totalBlogs, suspendedUsers);
+        return new AdminStatsResponse(totalAuthors, totalBlogs, suspendedUsers);
     }
 
     // ─── Users ───────────────────────────────────────────────
-    public List<UserResponse> getAllUsers() {
-        return userRepository.findByRole(UserRoles.USER)
-                .stream()
-                .map(this::mapToUserResponse)
-                .toList();
-    }
-
     public List<UserResponse> getAllAuthors() {
         return userRepository.findByRole(UserRoles.AUTHOR)
                 .stream()
