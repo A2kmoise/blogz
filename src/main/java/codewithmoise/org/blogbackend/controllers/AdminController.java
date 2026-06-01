@@ -60,21 +60,4 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    // ─── Categories ──────────────────────────────────────────
-    @GetMapping("/categories")
-    public ResponseEntity<List<String>> getAllCategories() {
-        return ResponseEntity.ok(adminService.getAllCategories());
-    }
-
-    @PostMapping("/categories")
-    public ResponseEntity<Void> createCategory(@RequestParam String name) {
-        adminService.createCategory(name);
-        return ResponseEntity.status(201).build();
-    }
-
-    @DeleteMapping("/categories/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        adminService.deleteCategory(id);
-        return ResponseEntity.noContent().build();
-    }
 }
