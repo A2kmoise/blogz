@@ -3,13 +3,17 @@ package codewithmoise.org.blogbackend.controllers;
 import codewithmoise.org.blogbackend.DTO.requests.BlogPostRequest;
 import codewithmoise.org.blogbackend.DTO.requests.BlogUpdateRequest;
 import codewithmoise.org.blogbackend.DTO.responses.BlogResponse;
+import codewithmoise.org.blogbackend.enums.BlogCategory;
 import codewithmoise.org.blogbackend.services.BlogService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,9 +49,25 @@ public class BlogController {
         return ResponseEntity.ok(blogService.getBlogsByUser(userId));
     }
 
-    @PostMapping
-    public ResponseEntity<BlogResponse> createBlog(@Valid @RequestBody BlogPostRequest blog) {
-        BlogResponse createdBlog = blogService.createBlog(blog);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BlogResponse> createBlog(
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam("category") BlogCategory category,
+            @RequestParam(value = "tags", required = false) String tags,
+            @RequestParam(value = "image", required = false) MultipartFile image) {
+        
+        BlogPostRequest request = new BlogPostRequest();
+        request.setTitle(title);
+        request.setContent(content);
+        request.setCategory(category);
+        request.setImage(image);
+        
+        if (tags != null && !tags.isEmpty()) {
+            request.setTags(Arrays.asList(tags.split(",")));
+        }
+        
+        BlogResponse createdBlog = blogService.createBlog(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdBlog);
     }
 
