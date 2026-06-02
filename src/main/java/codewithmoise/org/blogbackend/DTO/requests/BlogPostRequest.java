@@ -4,6 +4,7 @@ import codewithmoise.org.blogbackend.enums.BlogCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class BlogPostRequest {
     private BlogCategory category;
 
     private List<String> tags;
+
+    private MultipartFile image;
 
     private Long userId;
 }
