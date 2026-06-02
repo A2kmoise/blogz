@@ -26,11 +26,13 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final UserRepository userRepository;
     private final TagService tagService;
+    private final CloudinaryService cloudinaryService;
 
-    public BlogService(BlogRepository blogRepository, UserRepository userRepository, TagService tagService) {
+    public BlogService(BlogRepository blogRepository, UserRepository userRepository, TagService tagService, CloudinaryService cloudinaryService) {
         this.blogRepository = blogRepository;
         this.userRepository = userRepository;
         this.tagService = tagService;
+        this.cloudinaryService = cloudinaryService;
     }
 
    // Fetching in pages each has 10 blogs
@@ -58,6 +60,16 @@ public class BlogService {
         blog.setContent(blogPostRequest.getContent());
         blog.setCategory(blogPostRequest.getCategory());
         blog.setUser(user);
+
+        // Handle image upload
+        if (blogPostRequest.getImage() != null && !blogPostRequest.getImage().isEmpty()) {
+            try {
+                String imageUrl = cloudinaryService.uploadImage(blogPostRequest.getImage());
+                blog.setImageUrl(imageUrl);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to upload image: " + e.getMessage());
+            }
+        }
 
         if (blogPostRequest.getTags() != null && !blogPostRequest.getTags().isEmpty()) {
             List<Tag> tags = tagService.findOrCreateTags(blogPostRequest.getTags());
@@ -98,6 +110,17 @@ public class BlogService {
         if(!blog.getUser().getId().equals(currentUserId)){
             throw new AccessDeniedException("You can not delete");
         }
+
+        // Delete image from Cloudinary if exists
+        if (blog.getImageUrl() != null && !blog.getImageUrl().isEmpty()) {
+            try {
+                cloudinaryService.deleteImage(blog.getImageUrl());
+            } catch (Exception e) {
+                // Log error but continue with blog deletion
+                System.err.println("Failed to delete image from Cloudinary: " + e.getMessage());
+            }
+        }
+
         blogRepository.delete(blog);
     }
 
@@ -113,6 +136,7 @@ public class BlogService {
         response.setId(blog.getId());
         response.setTitle(blog.getTitle());
         response.setContent(blog.getContent());
+        response.setImageUrl(blog.getImageUrl());
         response.setCategory(blog.getCategory());
         response.setAuthorId(blog.getUser().getId());
         response.setCreatedAt(blog.getCreatedAt());
