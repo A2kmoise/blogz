@@ -15,6 +15,8 @@ public class BlogResponse {
 
     private String content;
 
+    private String imageUrl;
+
     private BlogCategory category;
 
     private List<String> tags;
