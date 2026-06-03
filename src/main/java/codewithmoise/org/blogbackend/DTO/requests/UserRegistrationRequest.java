@@ -8,6 +8,9 @@ import org.hibernate.validator.constraints.Length;
 @Data
 public class UserRegistrationRequest {
 
+    @NotBlank(message = "username is required")
+    private String username;
+
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
     private String email;
