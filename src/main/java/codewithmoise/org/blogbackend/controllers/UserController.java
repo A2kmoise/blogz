@@ -1,6 +1,6 @@
 package codewithmoise.org.blogbackend.controllers;
 
-import codewithmoise.org.blogbackend.DTO.requests.AuthenticationRequest;
+import codewithmoise.org.blogbackend.DTO.requests.LoginRequest;
 import codewithmoise.org.blogbackend.DTO.requests.UserRegistrationRequest;
 import codewithmoise.org.blogbackend.DTO.responses.AuthenticationResponse;
 import codewithmoise.org.blogbackend.DTO.responses.UserResponse;
@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class UserController {
 
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthenticationResponse response = authService.login(request);
         HttpStatus status = response.isSuccess() ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
         return ResponseEntity.status(status).body(response);
