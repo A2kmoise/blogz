@@ -6,7 +6,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 @Data
-public class AuthenticationRequest {
+public class LoginRequest {
 
     @Email(message = "invalid email")
     @NotBlank(message = "message is required")
