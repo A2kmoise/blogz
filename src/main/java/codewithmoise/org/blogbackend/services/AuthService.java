@@ -1,6 +1,6 @@
 package codewithmoise.org.blogbackend.services;
 
-import codewithmoise.org.blogbackend.DTO.requests.AuthenticationRequest;
+import codewithmoise.org.blogbackend.DTO.requests.LoginRequest;
 import codewithmoise.org.blogbackend.DTO.requests.UserRegistrationRequest;
 import codewithmoise.org.blogbackend.DTO.responses.AuthenticationResponse;
 import codewithmoise.org.blogbackend.DTO.responses.UserResponse;
@@ -31,6 +31,7 @@ public class AuthService {
         }
 
         User user = new User();
+        user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(UserRoles.AUTHOR);
@@ -47,7 +48,7 @@ public class AuthService {
         return new AuthenticationResponse("Account created successfully", userResponse, token, true);
     }
 
-    public AuthenticationResponse login(AuthenticationRequest request) {
+    public AuthenticationResponse login(LoginRequest request) {
         Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
         
         if (userOpt.isEmpty()) {
