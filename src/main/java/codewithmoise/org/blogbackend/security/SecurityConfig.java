@@ -33,7 +33,7 @@ public class SecurityConfig {
                         //read only
                         .requestMatchers(HttpMethod.GET,"/api/blogs/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**").permitAll()
 
                         // authors manage blogs
                         .requestMatchers(HttpMethod.POST, "/api/blogs/**").hasRole("AUTHOR")
