@@ -3,6 +3,8 @@ package codewithmoise.org.blogbackend.models;
 import codewithmoise.org.blogbackend.enums.BlogCategory;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,6 +23,12 @@ public class Blog {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "slug", unique = true)
+    private String slug;
+
+    @Column(name = "excerpt", columnDefinition = "TEXT")
+    private String excerpt;
+
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
@@ -31,16 +39,20 @@ public class Blog {
     @Enumerated(EnumType.STRING)
     private BlogCategory category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "blog_tags",
             joinColumns = @JoinColumn(name = "blog_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Tag> tags = new ArrayList<>();
 
     @CreationTimestamp
@@ -50,5 +62,16 @@ public class Blog {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-}
 
+    @Column(name = "scheduled_At")
+    private LocalDateTime scheduledAt;
+
+    @Column(name = "published", nullable = false)
+    private boolean published = true;
+
+    @Column(name = "views", nullable = false)
+    private int views = 0;
+
+    public Blog() {
+    }
+}
