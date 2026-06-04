@@ -2,6 +2,8 @@ package codewithmoise.org.blogbackend.services;
 
 import codewithmoise.org.blogbackend.DTO.requests.LoginRequest;
 import codewithmoise.org.blogbackend.DTO.requests.UserRegistrationRequest;
+import codewithmoise.org.blogbackend.DTO.requests.UserProfileUpdateRequest;
+import codewithmoise.org.blogbackend.DTO.requests.ChangePasswordRequest;
 import codewithmoise.org.blogbackend.DTO.responses.AuthenticationResponse;
 import codewithmoise.org.blogbackend.DTO.responses.UserResponse;
 import codewithmoise.org.blogbackend.enums.UserRoles;
@@ -71,17 +73,43 @@ public class AuthService {
         return new AuthenticationResponse("Login successful", userResponse, token, true);
     }
 
-    public UserResponse updateProfile(Long userId, UserRegistrationRequest request) {
+    public UserResponse updateProfile(Long userId, UserProfileUpdateRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setEmail(request.getEmail());
-        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        if (request.getName() != null && !request.getName().isBlank()) {
+            user.setUsername(request.getName());
+        }
+
+        if (request.getEmail() != null && !request.getEmail().isBlank()) {
+            if (user.getEmail() == null || !user.getEmail().equalsIgnoreCase(request.getEmail())) {
+                if (userRepository.existsByEmail(request.getEmail())) {
+                    throw new RuntimeException("Email already in use");
+                }
+            }
+            user.setEmail(request.getEmail());
         }
 
         User updatedUser = userRepository.save(user);
         return mapToUserResponse(updatedUser);
+    }
+
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(request.getCurrent(), user.getPassword())) {
+            throw new RuntimeException("Incorrect current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNext()));
+        userRepository.save(user);
+    }
+
+    public UserResponse getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return mapToUserResponse(user);
     }
 
     public boolean validateToken(String token) {
@@ -109,7 +137,9 @@ public class AuthService {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
+        response.setName(user.getUsername());
         response.setRole(user.getRole());
+        response.setSuspended(user.isSuspended());
         response.setCreatedAt(user.getCreatedAt());
         return response;
     }
