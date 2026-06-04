@@ -1,13 +1,14 @@
 package codewithmoise.org.blogbackend.DTO.requests;
 
 import codewithmoise.org.blogbackend.enums.BlogCategory;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Data
 public class BlogPostRequest {
@@ -23,7 +24,15 @@ public class BlogPostRequest {
 
     private List<String> tags;
 
+    @JsonProperty("coverImage")
     private MultipartFile image;
 
     private Long userId;
+
+    private String excerpt;
+
+    private Boolean published;
+
+    private LocalDateTime scheduledAt;
+
 }
