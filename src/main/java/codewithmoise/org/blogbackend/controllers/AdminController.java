@@ -1,8 +1,9 @@
 package codewithmoise.org.blogbackend.controllers;
 
-import codewithmoise.org.blogbackend.DTO.responses.BlogResponse;
-import codewithmoise.org.blogbackend.DTO.responses.UserResponse;
 import codewithmoise.org.blogbackend.DTO.responses.AdminStatsResponse;
+import codewithmoise.org.blogbackend.DTO.responses.BlogResponse;
+import codewithmoise.org.blogbackend.DTO.responses.PaginatedResponse;
+import codewithmoise.org.blogbackend.DTO.responses.UserResponse;
 import codewithmoise.org.blogbackend.services.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
+@CrossOrigin(origins = "*")
 public class AdminController {
 
     private final AdminService adminService;
@@ -25,29 +27,27 @@ public class AdminController {
         return ResponseEntity.ok(adminService.getStats());
     }
 
-    // ─── Users ──────────────────────────────────────────────
-
+    // ─── Users ───────────────────────────────────────────────
     @GetMapping("/authors")
-    public ResponseEntity<List<UserResponse>> getAllAuthors() {
-        return ResponseEntity.ok(adminService.getAllAuthors());
+    public ResponseEntity<List<UserResponse>> getAllAuthors(@RequestParam(required = false) String search) {
+        return ResponseEntity.ok(adminService.getAllAuthors(search));
     }
 
-    @PutMapping("/users/{id}/suspend")
-    public ResponseEntity<Void> suspendUser(@PathVariable Long id) {
-        adminService.suspendUser(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/users/{id}/unsuspend")
-    public ResponseEntity<Void> unsuspendUser(@PathVariable Long id) {
-        adminService.unsuspendUser(id);
-        return ResponseEntity.noContent().build();
+    @PatchMapping("/authors/{userId}/suspend")
+    public ResponseEntity<UserResponse> toggleSuspendUser(@PathVariable Long userId) {
+        UserResponse response = adminService.toggleSuspendUser(userId);
+        return ResponseEntity.ok(response);
     }
 
     // ─── Blogs ───────────────────────────────────────────────
     @GetMapping("/blogs")
-    public ResponseEntity<List<BlogResponse>> getAllBlogs() {
-        return ResponseEntity.ok(adminService.getAllBlogs());
+    public ResponseEntity<PaginatedResponse<BlogResponse>> getAllBlogs(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "20") int limit
+    ) {
+        return ResponseEntity.ok(adminService.getAllBlogs(search, category, page, limit));
     }
 
     @DeleteMapping("/blogs/{id}")
@@ -55,5 +55,4 @@ public class AdminController {
         adminService.deleteBlog(id);
         return ResponseEntity.noContent().build();
     }
-
 }
