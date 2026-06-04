@@ -9,9 +9,8 @@ import java.time.LocalDateTime;
 public class UserResponse {
     private Long id;
     private String email;
+    private String name;
     private UserRoles role;
+    private boolean suspended;
     private LocalDateTime createdAt;
-
-    public void setSuspended(boolean suspended) {
-    }
 }
