@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // public read
                         .requestMatchers(HttpMethod.GET, "/api/blogs/**").permitAll()
+                        .requestMatchers("/api/categories", "/api/tags").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(
                                 "/swagger-ui/**",
@@ -43,9 +44,13 @@ public class SecurityConfig {
                                 "/api-docs/**"
                         ).permitAll()
 
+
+                        .requestMatchers("/actuator/heath").permitAll()
+
                         // authors manage blogs
                         .requestMatchers(HttpMethod.POST,   "/api/blogs/**").hasRole("AUTHOR")
                         .requestMatchers(HttpMethod.PUT,    "/api/blogs/**").hasRole("AUTHOR")
+                        .requestMatchers(HttpMethod.PATCH, "/api/blogs/**").hasRole("AUTHOR")
                         .requestMatchers(HttpMethod.DELETE, "/api/blogs/**").hasRole("AUTHOR")
 
                         // admin monitoring
