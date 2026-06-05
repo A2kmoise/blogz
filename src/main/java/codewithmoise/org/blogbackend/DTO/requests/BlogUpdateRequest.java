@@ -1,6 +1,5 @@
 package codewithmoise.org.blogbackend.DTO.requests;
 
-import codewithmoise.org.blogbackend.enums.BlogCategory;
 import lombok.Data;
 
 import java.util.List;
