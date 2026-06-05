@@ -2,6 +2,8 @@ package codewithmoise.org.blogbackend.services;
 
 import codewithmoise.org.blogbackend.models.Tag;
 import codewithmoise.org.blogbackend.repository.TagRepository;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class TagService {
         return tags;
     }
 
+    @Cacheable(value = "tags")
     public List<Tag> getAllTags() {
         return tagRepository.findAll();
     }
