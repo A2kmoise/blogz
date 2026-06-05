@@ -10,6 +10,9 @@ import codewithmoise.org.blogbackend.models.Tag;
 import codewithmoise.org.blogbackend.models.User;
 import codewithmoise.org.blogbackend.repository.BlogRepository;
 import codewithmoise.org.blogbackend.repository.UserRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,8 +43,9 @@ public class BlogService {
         this.cloudinaryService = cloudinaryService;
     }
 
+    @Cacheable(value = "blogs", key = "#page + '-' + #size + '-' + #category + '-' + #search")
     @Transactional(readOnly = true)
-public PaginatedResponse<BlogResponse> getBlogs(int page, int size, String search, String category, String tag, String sort, Long authorId, Boolean published) {
+    public PaginatedResponse<BlogResponse> getBlogs(int page, int size, String search, String category, String tag, String sort, Long authorId, Boolean published) {
         int pageIndex = page > 0 ? page - 1 : 0;
 
         Sort sorting;
@@ -71,13 +75,15 @@ public PaginatedResponse<BlogResponse> getBlogs(int page, int size, String searc
         return new PaginatedResponse<>(mappedItems, blogs.getTotalElements(), page, size);
     }
 
+    @Cacheable(value = "blog", key = "'id-' + #id")
     @Transactional(readOnly = true)
-public Optional<BlogResponse> getBlogById(Long id) {
+    public Optional<BlogResponse> getBlogById(Long id) {
         return blogRepository.findById(id).map(this::mapToBlogResponse);
     }
 
+    @Cacheable(value = "blog", key = "#slug")
     @Transactional(readOnly = true)
-public Optional<BlogResponse> getBlogBySlug(String slug) {
+    public Optional<BlogResponse> getBlogBySlug(String slug) {
         return blogRepository.findBySlug(slug).map(blog -> {
             blog.setViews(blog.getViews() + 1);
             blogRepository.save(blog);
@@ -85,6 +91,7 @@ public Optional<BlogResponse> getBlogBySlug(String slug) {
         });
     }
 
+    @CacheEvict(value = "blogs", allEntries = true)
     public BlogResponse createBlog(BlogPostRequest blogPostRequest) {
         Long currentUserId = getCurrentUserId();
         User user = userRepository.findById(currentUserId)
@@ -145,6 +152,10 @@ public Optional<BlogResponse> getBlogBySlug(String slug) {
         return mapToBlogResponse(savedBlog);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "blog",  key = "#blogId"),
+            @CacheEvict(value = "blogs", allEntries = true)
+    })
     public BlogResponse updateBlog(BlogUpdateRequest blogUpdateRequest, Long blogId) {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new RuntimeException("Blog not found"));
@@ -198,6 +209,10 @@ public Optional<BlogResponse> getBlogBySlug(String slug) {
         return mapToBlogResponse(updatedBlog);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "blog",  key = "#blogId"),
+            @CacheEvict(value = "blogs", allEntries = true)
+    })
     public void deleteBlog(Long blogId) {
         Blog blog = blogRepository.findById(blogId)
                 .orElseThrow(() -> new RuntimeException("Blog not found"));
