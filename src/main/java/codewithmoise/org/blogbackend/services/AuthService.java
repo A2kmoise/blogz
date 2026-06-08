@@ -133,6 +133,14 @@ public class AuthService {
         // For now, the client will simply remove the token from storage
     }
 
+    public void forgotPassword(String email){
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if(user == null) { throw new RuntimeException("user not found");}
+
+
+    }
+
     private UserResponse mapToUserResponse(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
