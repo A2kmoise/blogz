@@ -11,6 +11,7 @@ import codewithmoise.org.blogbackend.models.User;
 import codewithmoise.org.blogbackend.repository.UserRepository;
 import codewithmoise.org.blogbackend.util.JwtUtil;
 import codewithmoise.org.blogbackend.util.PasswordEncoder;
+import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -137,6 +138,7 @@ public class AuthService {
         Optional<User> user = userRepository.findByEmail(email);
 
         if(user == null) { throw new RuntimeException("user not found");}
+
 
 
     }
