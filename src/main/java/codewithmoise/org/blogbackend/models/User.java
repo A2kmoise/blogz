@@ -25,6 +25,10 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    private String otp;
+
+    private  LocalDateTime otpExpiryDate;
+    
     @Column(name = "password")
     private String password;
 
