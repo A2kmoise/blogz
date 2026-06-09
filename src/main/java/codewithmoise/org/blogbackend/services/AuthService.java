@@ -10,11 +10,13 @@ import codewithmoise.org.blogbackend.enums.UserRoles;
 import codewithmoise.org.blogbackend.models.User;
 import codewithmoise.org.blogbackend.repository.UserRepository;
 import codewithmoise.org.blogbackend.util.JwtUtil;
+import codewithmoise.org.blogbackend.util.OtpGenerator;
 import codewithmoise.org.blogbackend.util.PasswordEncoder;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -23,12 +25,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final OtpGenerator otpGenerator;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, JavaMailSender mailSender) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, JavaMailSender mailSender, OtpGenerator otpGenerator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.javaMailSender = mailSender;
+        this.otpGenerator = otpGenerator;
     }
 
     public AuthenticationResponse createAccount(UserRegistrationRequest request) {
@@ -138,18 +142,35 @@ public class AuthService {
     }
 
     public void forgotPassword(String email){
-        Optional<User> user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new RuntimeException("user not found"));
 
-        if(user.isEmpty()) { throw new RuntimeException("user not found");}
+        //random one-time password
+        String otp = otpGenerator.generateOtp();
+
+        user.setOtp(otp);
+        user.setOtpExpiryDate(LocalDateTime.now().plusMinutes(6));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("Password update otp");
-        message.setText("OTP");
+        message.setText(" Be careful this opt expires in 6 minutes only. OTP: "+otp);
         message.setFrom("menyablogz@gmail.com");
 
         javaMailSender.send(message);
 
     }
+
+    public boolean verifyOtp(String email, String inputOtp){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("user not found"));
+
+        if(!user.getOtp().equals(inputOtp) || user.getOtpExpiryDate().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("Invalid or expired otp");
+        }
+
+        return true;
+    }
+
 
     private UserResponse mapToUserResponse(User user) {
         UserResponse response = new UserResponse();
