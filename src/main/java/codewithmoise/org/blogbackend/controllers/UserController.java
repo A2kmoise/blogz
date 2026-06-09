@@ -67,6 +67,12 @@ public class UserController {
       authService.forgotPassword(email);
       return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<Boolean> verifyOtp(@Valid @RequestParam String email, @RequestParam String inputOtp){
+        authService.verifyOtp(email, inputOtp);
+        return ResponseEntity.ok().build();
+    }
     @PostMapping("/change-password")
     public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
         Long currentUserId = getCurrentUserId();
