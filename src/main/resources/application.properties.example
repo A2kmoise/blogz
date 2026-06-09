@@ -65,3 +65,9 @@ spring.data.redis.timeout=2000ms
 
 #Cache TTL
 spring.cache.redis.time-to-live=600000
+
+#mail config
+spring.mail.host=*************
+spring.mail.port=1234
+spring.mail.username=**************
+spring.mail.password=********
