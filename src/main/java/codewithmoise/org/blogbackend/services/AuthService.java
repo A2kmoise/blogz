@@ -11,21 +11,24 @@ import codewithmoise.org.blogbackend.models.User;
 import codewithmoise.org.blogbackend.repository.UserRepository;
 import codewithmoise.org.blogbackend.util.JwtUtil;
 import codewithmoise.org.blogbackend.util.PasswordEncoder;
-import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class AuthService {
+    private final JavaMailSender javaMailSender;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, JavaMailSender mailSender) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.javaMailSender = mailSender;
     }
 
     public AuthenticationResponse createAccount(UserRegistrationRequest request) {
@@ -137,9 +140,14 @@ public class AuthService {
     public void forgotPassword(String email){
         Optional<User> user = userRepository.findByEmail(email);
 
-        if(user == null) { throw new RuntimeException("user not found");}
+        if(user.isEmpty()) { throw new RuntimeException("user not found");}
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Password update otp");
+        message.setText("OTP");
+        message.setFrom("menyablogz@gmail.com");
 
-
+        javaMailSender.send(message);
 
     }
 
