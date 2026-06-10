@@ -20,4 +20,6 @@ public class BlogUpdateRequest {
     private List<String> tags;
 
     private Boolean published;
+
+    private String scheduledAt;
 }
