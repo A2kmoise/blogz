@@ -42,8 +42,8 @@ public class BlogController {
             @RequestParam(required = false) Boolean published
     ) {
         int finalLimit = (pageSize != null) ? pageSize : (limit != null ? limit : 10);
-        // sort param currently not used; could be implemented later
-        return ResponseEntity.ok(blogService.getBlogs(page, finalLimit, search, category, tag, sort, authorId, published));
+        Boolean finalPublished = (published != null) ? published : Boolean.TRUE;
+        return ResponseEntity.ok(blogService.getBlogs(page, finalLimit, search, category, tag, sort, authorId, finalPublished));
     }
 
     @GetMapping("/mine")
@@ -103,7 +103,19 @@ public class BlogController {
         }
 
         if (scheduledAt != null && !scheduledAt.isEmpty()){
-            request.setScheduledAt(LocalDateTime.parse(scheduledAt));
+            try {
+                if (scheduledAt.endsWith("Z") || scheduledAt.contains("+") || (scheduledAt.length() > 10 && scheduledAt.substring(10).contains("-"))) {
+                    request.setScheduledAt(java.time.OffsetDateTime.parse(scheduledAt).toLocalDateTime());
+                } else {
+                    request.setScheduledAt(LocalDateTime.parse(scheduledAt));
+                }
+            } catch (Exception e) {
+                try {
+                    request.setScheduledAt(java.time.format.DateTimeFormatter.ISO_DATE_TIME.parse(scheduledAt, LocalDateTime::from));
+                } catch (Exception ex) {
+                    throw new IllegalArgumentException("Invalid date format for scheduledAt: " + scheduledAt);
+                }
+            }
         }
         
         BlogResponse createdBlog = blogService.createBlog(request);
