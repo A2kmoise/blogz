@@ -197,6 +197,30 @@ public class BlogService {
 
         if (blogUpdateRequest.getPublished() != null) {
             blog.setPublished(blogUpdateRequest.getPublished());
+            if (blogUpdateRequest.getPublished()) {
+                blog.setScheduledAt(null);
+            }
+        }
+
+        if (blogUpdateRequest.getScheduledAt() != null) {
+            String schedStr = blogUpdateRequest.getScheduledAt();
+            if (schedStr.isEmpty() || "null".equalsIgnoreCase(schedStr)) {
+                blog.setScheduledAt(null);
+            } else {
+                try {
+                    if (schedStr.endsWith("Z") || schedStr.contains("+") || (schedStr.length() > 10 && schedStr.substring(10).contains("-"))) {
+                        blog.setScheduledAt(java.time.OffsetDateTime.parse(schedStr).toLocalDateTime());
+                    } else {
+                        blog.setScheduledAt(java.time.LocalDateTime.parse(schedStr));
+                    }
+                } catch (Exception e) {
+                    try {
+                        blog.setScheduledAt(java.time.format.DateTimeFormatter.ISO_DATE_TIME.parse(schedStr, java.time.LocalDateTime::from));
+                    } catch (Exception ex) {
+                        throw new IllegalArgumentException("Invalid date format for scheduledAt: " + schedStr);
+                    }
+                }
+            }
         }
 
         if (blogUpdateRequest.getTags() != null) {
@@ -238,7 +262,7 @@ public class BlogService {
     public PaginatedResponse<BlogResponse> getBlogsByUser(Long userId, int page, int size) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return getBlogs(page, size, null, null, null, "newest", userId, null);
+        return getBlogs(page, size, null, null, null, "newest", userId, Boolean.TRUE);
     }
 
     public PaginatedResponse<BlogResponse> getMyBlogs(int page, int size) {
