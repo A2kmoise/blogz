@@ -18,7 +18,7 @@ public class TagCleanupScheduler {
     }
 
     //fixedRate = 6000
-    @Scheduled(cron = "0 0 2 * * *")
+    @Scheduled(cron = "${tag.cleanup.cron:0 0 2 * * *}")
     @Transactional
     public void cleanupOrphanedTags() {
         log.info("Tag cleanup started...");
