@@ -71,3 +71,6 @@ spring.mail.host=*************
 spring.mail.port=1234
 spring.mail.username=**************
 spring.mail.password=********
+
+#customDynamicScheduling
+tag.cleanup.cron=0 0 2 * * *
