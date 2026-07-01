@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#### DEPLOYMENT ####
+RENDER_DEPLOYMENT.md
