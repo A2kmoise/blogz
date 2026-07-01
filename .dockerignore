@@ -1,0 +1,51 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Maven
+target
+.m2
+*.jar
+*.war
+
+# Documentation
+README.md
+docs
+*.md
+
+# CI/CD
+.github
+.gitlab-ci.yml
+Jenkinsfile
+
+# Docker
+Dockerfile
+docker-compose.yml
+compose.yaml
+.dockerignore
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+build
+dist
+out
+
+# Logs
+*.log
+logs
+
+# OS
+Thumbs.db
