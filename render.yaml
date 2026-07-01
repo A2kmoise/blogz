@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: blog-backend
+    runtime: docker
+    region: oregon
+    plan: free
+    
+    # Environment variables
+    envVars:
+      - key: JAVA_OPTS
+        value: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0
+      - key: PORT
+        value: '4050'
+    
+    # Build configuration
+    dockerfilePath: ./Dockerfile
+    
+    # Health check
+    healthCheckPath: /actuator/health
+    
+    # Auto-deploy on push
+    autoDeploy: true
