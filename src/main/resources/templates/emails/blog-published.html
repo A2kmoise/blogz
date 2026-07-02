@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Blog Published</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .greeting strong {
+            color: #11998e;
+        }
+        .blog-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .blog-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .blog-author {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .blog-author strong {
+            color: #11998e;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 14px 40px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+        .message {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.8;
+        }
+        .divider {
+            border-top: 1px solid #eee;
+            margin: 30px 0;
+        }
+        .footer {
+            background-color: #f4f4f4;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #eee;
+        }
+        .footer a {
+            color: #11998e;
+            text-decoration: none;
+        }
+        .preferences {
+            font-size: 12px;
+            text-align: center;
+            padding: 15px;
+            background-color: #f9f9f9;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        .preferences a {
+            color: #11998e;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 New Blog Published!</h1>
+            <p>Check Out the Latest Content</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                Hi there!
+            </div>
+            
+            <div class="message">
+                <strong th:text="${authorName}">Author Name</strong> just published a new blog post that you might find interesting!
+            </div>
+            
+            <div class="blog-card">
+                <div class="blog-title" th:text="${blogTitle}">Amazing Blog Post Title</div>
+                <div class="blog-author">
+                    by <strong th:text="${authorName}">Author Name</strong>
+                </div>
+                <a th:href="${blogLink}" class="cta-button">Read Full Post</a>
+            </div>
+            
+            <div class="message" style="margin-top: 30px;">
+                Don't miss out on great content. Follow your favorite authors to stay updated on their latest posts.
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="message" style="font-size: 13px; color: #999;">
+                Enjoying our content? Share this post with your friends and help grow our community!
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Blog Backend. All rights reserved.</p>
+            <div class="preferences">
+                <p>Want to change how you receive notifications? <a href="https://yourblog.com/preferences">Update your preferences</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
