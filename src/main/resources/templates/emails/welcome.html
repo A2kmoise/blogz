@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Blog Backend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .greeting strong {
+            color: #667eea;
+        }
+        .message {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+        }
+        .features {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+        .feature-item {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .feature-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .footer {
+            background-color: #f4f4f4;
+            padding: 20px 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            border-top: 1px solid #eee;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Welcome!</h1>
+            <p>Your Journey Begins Here</p>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                Hi <strong th:text="${userName}">User</strong>,
+            </div>
+            
+            <div class="message">
+                Welcome to Blog Backend! We're thrilled to have you join our community. 
+                Whether you're here to share your stories, insights, or connect with other writers, 
+                you're in the right place.
+            </div>
+            
+            <div class="features">
+                <strong style="color: #333; display: block; margin-bottom: 15px;">Here's what you can do:</strong>
+                <div class="feature-item">Create and publish your own blog posts</div>
+                <div class="feature-item">Discover inspiring content from other authors</div>
+                <div class="feature-item">Manage your profile and personalize your experience</div>
+                <div class="feature-item">Organize content with tags and categories</div>
+                <div class="feature-item">Engage with the community</div>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="https://yourblog.com" class="cta-button">Get Started</a>
+            </div>
+            
+            <div class="message" style="margin-top: 30px; font-size: 13px; color: #999;">
+                If you have any questions, feel free to reach out to our support team. 
+                We're here to help!
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Blog Backend. All rights reserved.</p>
+            <p>You're receiving this because you signed up for Blog Backend</p>
+        </div>
+    </div>
+</body>
+</html>
