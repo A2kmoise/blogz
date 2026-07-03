@@ -1,4 +1,4 @@
-inpackage codewithmoise.org.blogbackend.services;
+package codewithmoise.org.blogbackend.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
