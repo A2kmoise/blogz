@@ -27,10 +27,20 @@ public class User {
 
     private String otp;
 
-    private  LocalDateTime otpExpiryDate;
-    
+    private LocalDateTime otpExpiryDate;
+
     @Column(name = "password")
     private String password;
+
+    // Password Reset Fields
+    @Column(unique = true)
+    private String passwordResetToken;
+
+    private LocalDateTime passwordResetTokenExpiryDate;
+
+    private boolean passwordResetRequested;
+
+    private LocalDateTime lastPasswordResetRequestTime;
 
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
