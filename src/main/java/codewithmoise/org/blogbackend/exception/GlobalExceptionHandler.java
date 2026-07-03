@@ -25,4 +25,11 @@ public class GlobalExceptionHandler {
         error.put("error", "Access denied: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
+
+    @ExceptionHandler(PasswordResetException.class)
+    public ResponseEntity<Map<String, String>> handlePasswordResetException(PasswordResetException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 }
