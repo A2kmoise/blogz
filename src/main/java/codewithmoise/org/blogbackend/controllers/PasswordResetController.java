@@ -5,6 +5,7 @@ import codewithmoise.org.blogbackend.DTO.requests.ResetPasswordRequest;
 import codewithmoise.org.blogbackend.DTO.requests.VerifyResetTokenRequest;
 import codewithmoise.org.blogbackend.exception.PasswordResetException;
 import codewithmoise.org.blogbackend.services.PasswordResetService;
+import codewithmoise.org.blogbackend.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,12 +30,42 @@ public class PasswordResetController {
     @PostMapping("/request")
     public ResponseEntity<Map<String, Object>> requestPasswordReset(@RequestBody ForgotPasswordRequest request) {
         try {
-            if (request.getEmail() == null || request.getEmail().isBlank()) {
+            // Input validation
+            if (request == null) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Request body is required", false, null));
+            }
+
+            String email = request.getEmail();
+
+            if (email == null || email.trim().isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(createResponse("Email is required", false, null));
             }
 
-            passwordResetService.requestPasswordReset(request.getEmail());
+            // Sanitize email
+            email = ValidationUtil.sanitizeEmail(email);
+
+            // Validate email format
+            if (!ValidationUtil.isValidEmail(email)) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Please provide a valid email address", false, null));
+            }
+
+            // Validate email length
+            if (!ValidationUtil.isEmailLengthValid(email)) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Email address is too long", false, null));
+            }
+
+            // Check for SQL injection patterns
+            if (ValidationUtil.containsSQLInjectionPatterns(email)) {
+                log.warn("Potential SQL injection attempted on password reset endpoint with email: {}", email);
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Invalid email format", false, null));
+            }
+
+            passwordResetService.requestPasswordReset(email);
 
             Map<String, Object> response = createResponse(
                     "If an account exists with this email, a password reset link has been sent.",
@@ -61,12 +92,36 @@ public class PasswordResetController {
     @PostMapping("/verify-token")
     public ResponseEntity<Map<String, Object>> verifyResetToken(@RequestBody VerifyResetTokenRequest request) {
         try {
-            if (request.getToken() == null || request.getToken().isBlank()) {
+            // Input validation
+            if (request == null) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Request body is required", false, null));
+            }
+
+            String token = request.getToken();
+
+            if (token == null || token.trim().isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(createResponse("Token is required", false, null));
             }
 
-            passwordResetService.verifyResetToken(request.getToken());
+            // Sanitize token
+            token = ValidationUtil.sanitizeInput(token.trim());
+
+            // Validate token format
+            if (!ValidationUtil.isValidToken(token)) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Invalid token format", false, null));
+            }
+
+            // Check for injection patterns
+            if (ValidationUtil.containsSQLInjectionPatterns(token)) {
+                log.warn("Potential SQL injection attempted on token verification");
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Invalid token format", false, null));
+            }
+
+            passwordResetService.verifyResetToken(token);
 
             Map<String, Object> response = createResponse(
                     "Token is valid",
@@ -93,28 +148,69 @@ public class PasswordResetController {
     @PostMapping("/reset")
     public ResponseEntity<Map<String, Object>> resetPassword(@RequestBody ResetPasswordRequest request) {
         try {
-            // Validate request
-            if (request.getToken() == null || request.getToken().isBlank()) {
+            // Input validation
+            if (request == null) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Request body is required", false, null));
+            }
+
+            String token = request.getToken();
+            String newPassword = request.getNewPassword();
+            String confirmPassword = request.getConfirmPassword();
+
+            // Validate token
+            if (token == null || token.trim().isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(createResponse("Token is required", false, null));
             }
 
-            if (request.getNewPassword() == null || request.getNewPassword().isBlank()) {
+            // Validate new password
+            if (newPassword == null || newPassword.isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(createResponse("New password is required", false, null));
             }
 
-            if (request.getConfirmPassword() == null || request.getConfirmPassword().isBlank()) {
+            if (newPassword.length() > 128) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Password is too long", false, null));
+            }
+
+            // Validate password confirmation
+            if (confirmPassword == null || confirmPassword.isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(createResponse("Password confirmation is required", false, null));
             }
 
+            if (confirmPassword.length() > 128) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Password confirmation is too long", false, null));
+            }
+
+            // Sanitize inputs
+            token = ValidationUtil.sanitizeInput(token.trim());
+
+            // Validate token format
+            if (!ValidationUtil.isValidToken(token)) {
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Invalid token format", false, null));
+            }
+
+            // Check for injection patterns
+            if (ValidationUtil.containsSQLInjectionPatterns(token)) {
+                log.warn("Potential SQL injection attempted on password reset");
+                return ResponseEntity.badRequest()
+                        .body(createResponse("Invalid token format", false, null));
+            }
+
+            // Pre-validate passwords before sending to service
+            ValidationUtil.PasswordValidationResult validationResult = ValidationUtil.validatePassword(newPassword);
+            if (!validationResult.isValid()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(createResponse(validationResult.getErrors(), false, null));
+            }
+
             // Reset password
-            passwordResetService.resetPassword(
-                    request.getToken(),
-                    request.getNewPassword(),
-                    request.getConfirmPassword()
-            );
+            passwordResetService.resetPassword(token, newPassword, confirmPassword);
 
             Map<String, Object> response = createResponse(
                     "Password has been reset successfully. You can now login with your new password.",
