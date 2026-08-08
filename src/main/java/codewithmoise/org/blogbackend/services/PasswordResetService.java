@@ -81,10 +81,11 @@ public class PasswordResetService {
         // Check rate limiting and brute force protection
         checkBruteForceProtection(email);
 
+        String finalEmail = email;
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    recordFailedAttempt(email);
-                    log.warn("Password reset requested for non-existent email: {}", email);
+                    recordFailedAttempt(finalEmail);
+                    log.warn("Password reset requested for non-existent email: {}", finalEmail);
                     // Return generic message (security: don't reveal if email exists)
                     throw new PasswordResetException("If an account exists with this email, you will receive a password reset link.");
                 });
