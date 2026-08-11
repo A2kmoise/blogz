@@ -38,6 +38,7 @@ public class User {
 
     private LocalDateTime passwordResetTokenExpiryDate;
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean passwordResetRequested;
 
     private LocalDateTime lastPasswordResetRequestTime;
