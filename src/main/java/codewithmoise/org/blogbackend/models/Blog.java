@@ -45,7 +45,7 @@ public class Blog {
     @EqualsAndHashCode.Exclude
     private User user;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "blog_tags",
             joinColumns = @JoinColumn(name = "blog_id"),
