@@ -1,6 +1,6 @@
 # Blog Platform
 
-A full-stack blog platform built with Spring Boot backend and vanilla JavaScript frontend featuring a green and white color palette.
+A full-stack blog platform built with a Spring Boot backend.
 
 ## Features
 
@@ -16,20 +16,10 @@ A full-stack blog platform built with Spring Boot backend and vanilla JavaScript
 - BCrypt password hashing
 - JWT token generation and validation
 
-### Frontend (HTML/CSS/JavaScript)
-- Responsive design with green and white theme
-- JWT token-based authentication
-- Blog creation and editing with rich forms
-- Admin dashboard with real-time statistics
-- Search and filter functionality
-- Modal-based interactions
-- Secure token storage
-
 ## Tech Stack
 
 - **Backend**: Spring Boot 4.0.6, Spring Data JPA, Spring Security, PostgreSQL
 - **Authentication**: JWT tokens, BCrypt password hashing
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
 - **Database**: PostgreSQL 15
 - **Build Tool**: Maven
 
@@ -38,7 +28,7 @@ A full-stack blog platform built with Spring Boot backend and vanilla JavaScript
 ### Prerequisites
 - Java 17 or higher
 - Maven 3.6+
-- Docker and Docker Compose (for PostgreSQL)
+- Docker and Docker Compose (for PostgreSQL and Redis)
 
 ### 1. Clone the Repository
 ```bash
@@ -53,13 +43,12 @@ docker-compose up -d
 
 ### 3. Run the Application
 ```bash
-./mvnw spring-boot:run
+./mvnw spring-boot: run
 ```
 
 The application will start on `http://localhost:8080`
 
 ### 4. Access the Application
-- **Frontend**: http://localhost:8080
 - **API Documentation**: http://localhost:8080/swagger-ui.html (if configured)
 
 ## Default Admin Account
@@ -126,23 +115,7 @@ The application will start on `http://localhost:8080`
 - CORS configuration for cross-origin requests
 - JWT-based stateless authentication
 - Protected admin endpoints
-- Input validation and sanitization
-
-## Frontend Features
-
-### User Interface
-- **Landing Page**: Displays all blogs with search and filter options
-- **Authentication**: JWT token-based login and signup
-- **Blog Management**: Create, edit, and delete blogs (admin only)
-- **Admin Dashboard**: Real-time statistics and management interface
-- **Responsive Design**: Works on all device sizes
-
-### Color Palette
-- Primary Green: #4caf50
-- Dark Green: #2e7d32
-- Light Green: #e8f5e8
-- White: #ffffff
-- Background: #f8fff8
+- Input validation and sanitisation
 
 ## Configuration
 
@@ -180,11 +153,11 @@ spring.datasource.password=secret
 4. Configure HTTPS in production
 5. Implement refresh token mechanism
 
-### Performance Optimizations
+### Performance Optimisations
 1. Add database indexing for frequently queried fields
 2. Implement caching for blog listings
 3. Add pagination for large datasets
-4. Optimize database queries with proper joins
+4. Optimise database queries with proper joins
 
 ### Monitoring & Logging
 1. Add structured logging with correlation IDs
